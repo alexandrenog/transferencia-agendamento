@@ -1,5 +1,6 @@
-package com.alexandre.transferenciaagendamento;
+package com.alexandre.transferenciaagendamento.configuration;
 
+import com.alexandre.transferenciaagendamento.TransferenciaAgendamentoApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
