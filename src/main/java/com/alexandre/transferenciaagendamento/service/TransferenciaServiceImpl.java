@@ -1,10 +1,11 @@
 package com.alexandre.transferenciaagendamento.service;
 
 import com.alexandre.transferenciaagendamento.classes.IntervaloDiasTransferencia;
+import com.alexandre.transferenciaagendamento.controller.form.TransferenciaForm;
+import com.alexandre.transferenciaagendamento.exception.ValidationRuntimeException;
 import com.alexandre.transferenciaagendamento.home.TransferenciaAgendadaHome;
 import com.alexandre.transferenciaagendamento.model.bean.TransferenciaAgendadaBean;
 import com.alexandre.transferenciaagendamento.model.dto.TaxaTransferenciaDTO;
-import com.alexandre.transferenciaagendamento.controller.form.TransferenciaForm;
 import com.alexandre.transferenciaagendamento.model.entity.TransferenciaAgendada;
 import com.alexandre.transferenciaagendamento.service.interfaces.TransferenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
+import static com.alexandre.transferenciaagendamento.classes.MessageFactory.getMessage;
+
 @Service
 @Transactional
 public class TransferenciaServiceImpl implements TransferenciaService {
 
     @Autowired
     private TransferenciaAgendadaHome transferenciaAgendadaHome;
-
 
     @Override
     public List<TransferenciaAgendadaBean> listarTransferencias() {
@@ -77,6 +79,9 @@ public class TransferenciaServiceImpl implements TransferenciaService {
                         )
                 );
             taxa.setScale(2, RoundingMode.HALF_UP);
+        } else {
+            throw new ValidationRuntimeException(
+                    getMessage("TransferenciaService.error.quantidadeDiasInvalido", numeroDias));
         }
 
         return taxa;

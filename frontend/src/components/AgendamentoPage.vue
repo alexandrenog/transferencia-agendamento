@@ -78,7 +78,7 @@
             </div>
 
             <div class="transfer-form-actions">
-              <wa-button variant="neutral" type="button" @click="$router.back()">
+              <wa-button variant="neutral" type="button" @click="$router.push('/')">
                 Cancelar
               </wa-button>
               <wa-button variant="neutral" appearance="outlined" type="button" @click="handleReset">
@@ -91,8 +91,8 @@
           </form>
         </wa-card>
 
-        <div class="transfer-result" v-if="resultado || erro">
-          <div class="receipt-stub" v-if="resultado">
+        <div class="transfer-result" v-if="resultado">
+          <div class="receipt-stub">
             <span class="receipt-stub-eyebrow">Resumo da transferência</span>
             <dl class="receipt-stub-figures">
               <div>
@@ -105,7 +105,7 @@
               </div>
             </dl>
             <div class="transfer-form-actions">
-              <wa-button variant="neutral" appearance="outlined" type="button" @click="$router.back()">
+              <wa-button variant="neutral" appearance="outlined" type="button" @click="$router.push('/')">
                 Cancelar
               </wa-button>
               <wa-button variant="brand" :loading="enviando" @click="confirmarTransferencia">
@@ -113,10 +113,6 @@
               </wa-button>
             </div>
           </div>
-
-          <wa-callout v-if="erro" variant="danger" class="transfer-form-result">
-            {{ erro }}
-          </wa-callout>
         </div>
       </div>
     </main>
@@ -127,6 +123,8 @@
 import { reactive, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { useErrorHandler } from '@/composables/useErrorHandler'
+const { handleApiError } = useErrorHandler()
 
 const router = useRouter()
 
@@ -157,14 +155,12 @@ const dataMinimaTransferencia = computed(() => form.dataAgendamento)
 // --- Envio do formulário ---
 const enviando = ref(false)
 const resultado = ref(null)   // resposta da API
-const erro = ref(null)        // mensagem de erro, se houver
 const formBloqueado = ref(false) // trava o formulário (não-editável / estilo acinzentado)
 
 const emit = defineEmits(['submit'])
 
 async function calculaTaxaTransferencia() {
   enviando.value = true
-  erro.value = null
   resultado.value = null
 
   const payload = {
@@ -192,17 +188,17 @@ async function calculaTaxaTransferencia() {
     const data = await response.json()
     resultado.value = data
     emit('submit', payload) // mantém o evento, se o componente pai precisar dele
+    formBloqueado.value = true
   } catch (e) {
-    erro.value = e.message || 'Erro ao calcular a taxa.'
+    formBloqueado.value = false
+    handleApiError(e)
   } finally {
     enviando.value = false
-    formBloqueado.value = true
   }
 }
 
 async function confirmarTransferencia () {
   enviando.value = true
-  erro.value = null
   resultado.value = null
 
   const payload = {
@@ -230,7 +226,7 @@ async function confirmarTransferencia () {
     const message = await response.text()
     toast.success(message)    
   } catch (e) {
-    erro.value = e.message || 'Erro ao agendar transferência.'
+    handleApiError(e)
   } finally {
     enviando.value = false
     router.push('/')
@@ -243,7 +239,6 @@ function handleReset() {
   form.valorTransferencia = null
   form.dataTransferencia = ''
   resultado.value = null
-  erro.value = null
   formBloqueado.value = false
 }
 
