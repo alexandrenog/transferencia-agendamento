@@ -7,5 +7,9 @@
     {
       "path": "./tsconfig.app.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "types": ["vite/client","@awesome.me/webawesome/dist/types/vue/index.d.ts"]
+  }
 }
+
