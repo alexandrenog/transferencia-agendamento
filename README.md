@@ -89,7 +89,7 @@ diretamente pelo Spring Boot (copiando o conteúdo para
 
 | Método | Rota                        | Descrição                                              |
 |--------|-----------------------------|---------------------------------------------------------|
-| GET    | `/api/transferencias`       | Lista as transferências agendadas                       |
+| GET    | `/api/listar-transferencias`| Lista as transferências agendadas                       |
 | POST   | `/api/calcula-taxa`         | Calcula a taxa e o valor total de uma transferência      |
 | POST   | `/api/agenda-transferencia` | Confirma e agenda a transferência                        |
 
