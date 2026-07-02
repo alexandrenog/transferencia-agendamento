@@ -43,7 +43,8 @@ transferencia-agendamento/                # raiz do projeto Spring Boot 2.7 (API
 - Vue 3
 - Vue Router
 - Vite
-- [Web Awesome](https://webawesome.com/) 
+- [Web Awesome](https://webawesome.com/) Esta biblioteca foi utilizada pois sendo de componentes de html nativo, é compativel com qualquer framework, e é altamente customizável.
+- [Vue Sooner](https://vue-sonner.vercel.app/) Utilizado para lançar mensagem tipo "Toast" na tela.
 
 ## Pré-requisitos
 
